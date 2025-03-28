@@ -7,7 +7,7 @@ Zbadanie danych dotyczących zanieczyszczenia powietrza z GIOSiu. Przeprowadzani
 - Interpolacja - stworzenie map wynikowych
 - Sekwencyjna symulacja gaussowska? - stworzenie map wynikowych
 - AutoML - generalizacja na różnego rodzaju zmienne dla różnych punktów (uogólnienie caego systemu)
-- Leave-one-out resampling - metoda ewaluacji tworzonych map poprzez odpowiednie wykluaczanie kolejnych punktów pomiarowych i tworzenie ich na podstawie pozostalych punktów.
+- Leave-one-out resampling - metoda ewaluacji tworzonych map poprzez odpowiednie wykluczanie kolejnych punktów pomiarowych i tworzenie ich na podstawie pozostalych punktów.
 
 ## Techniczna implementacja
 - Nixtla (modele) (klasteryzcja?)
