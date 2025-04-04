@@ -11,9 +11,8 @@
 
 ## 28.03.2025
 
-Postęp: Koncepcja projektu
-
-Problemy / kwestie do przedyskutowania: Brak
+Postęp: Stworzenie ogólnego planu, zapisanie ich do desc.md, analiza narzędzi
+Problemy / kwestie do przedyskutowania: zgoda na stworzenie projektu wymyslonego przez nas
 
 ## 21.03.2025
 
