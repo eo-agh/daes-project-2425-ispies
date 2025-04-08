@@ -30,7 +30,7 @@ jobs:
 
       - name: Install dependencies
         run: |
-          pip install black isort
+          pip install black[jupyter] isort
 
       - name: Apply formatters
         run: |
