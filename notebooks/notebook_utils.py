@@ -9,3 +9,4 @@ def set_root_directory():
     if GITIGNORE in dir_list:
         return
     os.chdir("..")
+    set_root_directory()
