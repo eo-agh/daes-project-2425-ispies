@@ -1,7 +1,9 @@
-## 11.04.2025
-- Podpięcie narzędzi pod GITa
+## 18.04.2025
 - Ingestor do danych
 - EDA
+- 
+## 11.04.2025
+- Podpięcie narzędzi pod GITa
 
 ## 04.04.2025
 - Manualna analiza danych wejściowych
