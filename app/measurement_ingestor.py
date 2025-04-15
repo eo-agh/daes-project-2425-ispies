@@ -518,7 +518,7 @@ class MeasurementIngestor:
             df_id = data.query(f"`{const.UNIQUE_ID}` == {unique_id}")
 
             # If not min_date or max_date in the DataFrame, add them
-            if not min_date in df_id[const.TIMESTAMP_COLUMN].unique():
+            if min_date not in df_id[const.TIMESTAMP_COLUMN].unique():
                 row = pd.DataFrame(
                     {
                         const.TIMESTAMP_COLUMN: [min_date],
@@ -526,7 +526,7 @@ class MeasurementIngestor:
                     }
                 )
                 df_id = pd.concat([row, df_id], ignore_index=True)
-            if not max_date in df_id[const.TIMESTAMP_COLUMN].unique():
+            if max_date not in df_id[const.TIMESTAMP_COLUMN].unique():
                 row = pd.DataFrame(
                     {
                         const.TIMESTAMP_COLUMN: [max_date],
