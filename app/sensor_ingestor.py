@@ -39,9 +39,9 @@ class SensorIngestor:
             .str.split(",")
             .apply(lambda x: {s.strip() for s in x})
         )
-        data.loc[data[const.OLD_STATION_CODE].isna(), const.OLD_STATION_CODE] = [
-            set()
-        ] * len(data[data[const.OLD_STATION_CODE].isna()])
+        data.loc[data[const.OLD_STATION_CODE].isna(), const.OLD_STATION_CODE] = [set()] * len(
+            data[data[const.OLD_STATION_CODE].isna()]
+        )
 
         # Coalesce the station_codes
         # The sets of old stations codes are coalesced into a single set
