@@ -1,3 +1,5 @@
+"""This module contains utility functions for Jupyter notebooks."""
+
 import os
 
 GITIGNORE = ".gitignore"
