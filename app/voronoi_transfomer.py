@@ -59,9 +59,7 @@ class VoronoiTransformer:
         distances = np.linspace(0, buffer_boundary_length, self.buffer_points_amount)
         points = [buffer_boundary.interpolate(d).values[0] for d in distances]
 
-        self.buffer_points = gpd.GeoDataFrame(
-            geometry=points, crs=self.mask_polygon.crs
-        )
+        self.buffer_points = gpd.GeoDataFrame(geometry=points, crs=self.mask_polygon.crs)
         self.is_fitted = True
         return self
 
@@ -79,9 +77,7 @@ class VoronoiTransformer:
             A GeoSeries containing the Voronoi polygons for the input points.
         """
         if not self.is_fitted:
-            raise RuntimeError(
-                "The transformer must be fitted before transforming data."
-            )
+            raise RuntimeError("The transformer must be fitted before transforming data.")
 
         X_to_process = X.copy()
         if X_to_process.crs != self.mask_polygon.crs:
@@ -100,9 +96,7 @@ class VoronoiTransformer:
         except ValueError as e:
             raise ValueError("Voronoi diagram could not be created.") from e
 
-        polygons = self._voronoi_to_polygons(
-            vor=vor, initial_points_length=len(points_sensors)
-        )
+        polygons = self._voronoi_to_polygons(vor=vor, initial_points_length=len(points_sensors))
 
         mask_polygon_geometry = self.mask_polygon.geometry.values[0]
         polygons = [polygon.intersection(mask_polygon_geometry) for polygon in polygons]
