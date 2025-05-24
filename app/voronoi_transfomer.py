@@ -87,7 +87,9 @@ class VoronoiTransformer:
         if X_to_process.crs != self.mask_polygon.crs:
             X_to_process = X_to_process.to_crs(self.mask_polygon.crs)  # type: ignore
 
-        points_sensors = np.array([[geom.x, geom.y] for geom in X_to_process.geometry])  # type: ignore
+        points_sensors = np.array(
+            [[geom.x, geom.y] for geom in X_to_process.geometry]  # type: ignore
+        )
         points_buffer = np.array(
             [[geom.x, geom.y] for geom in self.buffer_points.geometry]  # type: ignore
         )
