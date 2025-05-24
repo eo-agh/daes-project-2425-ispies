@@ -93,7 +93,11 @@ class VoronoiTransformer:
         )
         points = np.concatenate([points_sensors, points_buffer], axis=0)
 
-        vor = Voronoi(points)
+        try:
+            vor = Voronoi(points)
+        except ValueError as e:
+            raise ValueError("Voronoi diagram could not be created.") from e
+
         polygons = self._voronoi_to_polygons(
             vor=vor, initial_points_length=len(points_sensors)
         )
