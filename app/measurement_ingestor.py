@@ -108,7 +108,9 @@ class MeasurementIngestor:
 
             # Skip the file if measure time is not valid
             if not measure_time:
-                logging.warning("Invalid measurement time in file %s. Skipping.", file_name)
+                logging.warning(
+                    "Invalid measurement time in file %s. Skipping.", file_name
+                )
                 continue
 
             # Check if the file is an Excel file
@@ -158,7 +160,9 @@ class MeasurementIngestor:
             )
 
             # Adjust types of the columns
-            adjusted_df = self._adjust_types(melted_single_measure_df, variable=variable)
+            adjusted_df = self._adjust_types(
+                melted_single_measure_df, variable=variable
+            )
 
             # Assign the measure to the correct dictionary
             # It cannot happen here that the measure time is not 1h or 24h
@@ -178,7 +182,9 @@ class MeasurementIngestor:
 
         return df_time_1h, df_time_24h
 
-    def _extract_measurement_metadata(self, file_name: str) -> Tuple[Optional[MeasureTime], str]:
+    def _extract_measurement_metadata(
+        self, file_name: str
+    ) -> Tuple[Optional[MeasureTime], str]:
         """Scrap the measurement metadata from the DataFrame.
 
         Parameters
@@ -235,7 +241,9 @@ class MeasurementIngestor:
         """
         try:
             # Try to extract the sensor names based on the KOD STACJI row
-            sensor_names = data.query(f"`{const.COLUMN_0}` == '{const.KOD_STACJI}'").iloc[0, 1:]
+            sensor_names = data.query(
+                f"`{const.COLUMN_0}` == '{const.KOD_STACJI}'"
+            ).iloc[0, 1:]
             return sensor_names.to_dict()
 
         except IndexError:
@@ -244,14 +252,16 @@ class MeasurementIngestor:
                 file_name,
             )
             # Select first three values from the non-date rows
-            df = data.iloc[:first_date_index, 1 : const.KOD_STACJI_INFERRING_ROW_SAMPLE + 1]
+            df = data.iloc[
+                :first_date_index, 1 : const.KOD_STACJI_INFERRING_ROW_SAMPLE + 1
+            ]
             for index, row in df.iterrows():
                 # Process each of the first N columns
                 for value in row:
                     # Check if the value is identified as old station code
-                    old_station_mask = self.sensor_metadata[const.OLD_STATION_CODE].apply(
-                        lambda x: value in x
-                    )
+                    old_station_mask = self.sensor_metadata[
+                        const.OLD_STATION_CODE
+                    ].apply(lambda x: value in x)
                     if old_station_mask.any():
                         logging.info("Found row with station codes")
                         return data.iloc[index, 1:].to_dict()  # type: ignore
@@ -367,10 +377,14 @@ class MeasurementIngestor:
         cols_to_keep = [const.COLUMN_0] + list(sensor_codes.keys())
 
         # Select the columns to duplicate - identified sensor codes with multiple IDs
-        columns_to_duplicate = [key for key, value in sensor_codes.items() if len(value) > 1]
+        columns_to_duplicate = [
+            key for key, value in sensor_codes.items() if len(value) > 1
+        ]
 
         # The columns to rename are the columns that are not duplicated
-        col_to_rename = list(set(cols_to_keep) - set(columns_to_duplicate) - {const.COLUMN_0})
+        col_to_rename = list(
+            set(cols_to_keep) - set(columns_to_duplicate) - {const.COLUMN_0}
+        )
 
         # Create dataframe for sub operations
         # It's imporant to separate the rename and duplicate operations
@@ -397,7 +411,9 @@ class MeasurementIngestor:
 
         # Duplicated column names
         duplicated_columns_mask = to_remove_duplicated.columns.duplicated(keep=False)
-        duplicated_columns = to_remove_duplicated.columns[duplicated_columns_mask].unique()
+        duplicated_columns = to_remove_duplicated.columns[
+            duplicated_columns_mask
+        ].unique()
 
         # Remove the duplicated columns from the DataFrame
         result = to_remove_duplicated.loc[:, ~duplicated_columns_mask]
@@ -406,10 +422,12 @@ class MeasurementIngestor:
         for col in duplicated_columns:
             subset_with_duplicates: pd.DataFrame = to_remove_duplicated.loc[:, col]  # type: ignore
             for i in range(1, len(subset_with_duplicates.columns)):
-                subset_with_duplicates.iloc[:, 0] = subset_with_duplicates.iloc[:, 0].combine_first(
-                    subset_with_duplicates.iloc[:, i]
-                )
-            result = pd.concat([result, subset_with_duplicates.iloc[:, 0].to_frame()], axis=1)
+                subset_with_duplicates.iloc[:, 0] = subset_with_duplicates.iloc[
+                    :, 0
+                ].combine_first(subset_with_duplicates.iloc[:, i])
+            result = pd.concat(
+                [result, subset_with_duplicates.iloc[:, 0].to_frame()], axis=1
+            )
 
         return result
 
@@ -462,7 +480,9 @@ class MeasurementIngestor:
 
         def merge_func(x: pd.DataFrame, y: pd.DataFrame) -> pd.DataFrame:
             """Heleper function to merge two DataFrames."""
-            return pd.merge(x, y, how="outer", on=[const.TIMESTAMP_COLUMN, const.UNIQUE_ID])
+            return pd.merge(
+                x, y, how="outer", on=[const.TIMESTAMP_COLUMN, const.UNIQUE_ID]
+            )
 
         df = pd.concat(
             [reduce(merge_func, dict_of_data[key]) for key in dict_of_data.keys()],
@@ -471,7 +491,9 @@ class MeasurementIngestor:
 
         return df
 
-    def _resample_df(self, data: pd.DataFrame, measure_time: MeasureTime) -> pd.DataFrame:
+    def _resample_df(
+        self, data: pd.DataFrame, measure_time: MeasureTime
+    ) -> pd.DataFrame:
         """Resample the DataFrame to the specified measurement time.
 
         Parameters
