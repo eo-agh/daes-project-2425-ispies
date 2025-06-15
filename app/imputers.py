@@ -277,13 +277,17 @@ class SupportedLastImputer(Imputer):
 
         def _impute_time_series(X: pd.DataFrame, unique_id: int) -> pd.DataFrame:
             """Impute missing values for a single time series."""
-            time_series = X[X[constants.UNIQUE_ID] == unique_id]
-            first_valid_index = time_series.first_valid_index()
-            last_valid_index = time_series.last_valid_index()
+            variable_column = X.columns[-1]
 
-            data_for_support_imputer_first = time_series.loc[:first_valid_index, :]
-            data_for_support_imputer_last = time_series.loc[last_valid_index:, :]
-            data_for_imputation = time_series.loc[first_valid_index:last_valid_index, :]
+            time_series = X[X[constants.UNIQUE_ID] == unique_id].reset_index(drop=True)
+            first_valid_index = time_series[variable_column].first_valid_index()
+            last_valid_index = time_series[variable_column].last_valid_index()
+
+            data_for_support_imputer_first = time_series.iloc[:first_valid_index, :]
+            data_for_support_imputer_last = time_series.iloc[last_valid_index:, :]
+            data_for_imputation = time_series.iloc[
+                first_valid_index:last_valid_index, :
+            ]
 
             result_first = self._use_support_imputer(
                 X, data_for_support_imputer_first, unique_id
