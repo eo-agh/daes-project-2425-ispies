@@ -1,3 +1,8 @@
+## 18.06.2025
+
+## 13.06.2025
+- Imputacja danych
+
 ## 30.05.2025
 - Analiza rozmieszczenia sensorów na podstawie diagramów Voronoi
 
