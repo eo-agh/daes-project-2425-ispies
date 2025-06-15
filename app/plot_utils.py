@@ -44,9 +44,7 @@ def plot_voronoi(gdf: gpd.GeoDataFrame, variable: str, year: str):
     plt.show()
 
 
-def plot_voronoi_area_boxplot(
-    gdf: gpd.GeoDataFrame, variable: str, min_year: int, max_year: int
-):
+def plot_voronoi_area_boxplot(gdf: gpd.GeoDataFrame, variable: str, min_year: int, max_year: int):
     """Plot a boxplot of Voronoi cell areas for a given variable over a range of years.
     The function does not return anything, it just plots the boxplot.
     It is designed to work with interact from ipywidgets.
@@ -187,9 +185,7 @@ def plot_voronoi_area_timeseries(
     )
 
     # Stylizacja
-    ax.set_title(
-        f"Średnia, min i max powierzchnia komórek Voronoi dla zmiennej '{variable}'"
-    )
+    ax.set_title(f"Średnia, min i max powierzchnia komórek Voronoi dla zmiennej '{variable}'")
     ax.set_xlabel("Rok")
     ax.set_ylabel("Powierzchnia")
     ax.set_xticks(np.arange(min_year, max_year + 1))

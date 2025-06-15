@@ -113,9 +113,7 @@ class NearestSensorImputer(Imputer):
             A list of sensor IDs corresponding to the distance matrix.
         """
         if len(distance_matrix) != len(sensor_ids):
-            raise ValueError(
-                "Distance matrix size must match the number of sensor IDs."
-            )
+            raise ValueError("Distance matrix size must match the number of sensor IDs.")
 
         self.distance_matrix = distance_matrix
         self.sensor_ids = sensor_ids
@@ -178,9 +176,7 @@ class NearestSensorImputer(Imputer):
                 value = row[variable_column]
                 while pd.isna(value) and index < len(nearest_sensors[sensor_id]):
                     try:
-                        value = X_series.loc[
-                            (measure_date, nearest_sensors[sensor_id][index])
-                        ]
+                        value = X_series.loc[(measure_date, nearest_sensors[sensor_id][index])]
                     except KeyError:
                         pass
                     index += 1
@@ -190,9 +186,7 @@ class NearestSensorImputer(Imputer):
             return df
 
         variable_column = X.columns[-1]
-        X_series = X.set_index([constants.TIMESTAMP_COLUMN, constants.UNIQUE_ID])[
-            variable_column
-        ]
+        X_series = X.set_index([constants.TIMESTAMP_COLUMN, constants.UNIQUE_ID])[variable_column]
         X_dask = dd.from_pandas(X, npartitions=None)
 
         with ProgressBar():
@@ -271,9 +265,7 @@ class SupportedLastImputer(Imputer):
 
         self._validate_dataframe(X)
 
-        X = X.sort_values(
-            [constants.UNIQUE_ID, constants.TIMESTAMP_COLUMN]
-        ).reset_index(drop=True)
+        X = X.sort_values([constants.UNIQUE_ID, constants.TIMESTAMP_COLUMN]).reset_index(drop=True)
 
         def _impute_time_series(X: pd.DataFrame, unique_id: int) -> pd.DataFrame:
             """Impute missing values for a single time series."""
@@ -285,25 +277,16 @@ class SupportedLastImputer(Imputer):
 
             data_for_support_imputer_first = time_series.iloc[:first_valid_index, :]
             data_for_support_imputer_last = time_series.iloc[last_valid_index:, :]
-            data_for_imputation = time_series.iloc[
-                first_valid_index:last_valid_index, :
-            ]
+            data_for_imputation = time_series.iloc[first_valid_index:last_valid_index, :]
 
-            result_first = self._use_support_imputer(
-                X, data_for_support_imputer_first, unique_id
-            )
-            result_last = self._use_support_imputer(
-                X, data_for_support_imputer_last, unique_id
-            )
+            result_first = self._use_support_imputer(X, data_for_support_imputer_first, unique_id)
+            result_last = self._use_support_imputer(X, data_for_support_imputer_last, unique_id)
             result_middle = data_for_imputation.ffill()
 
-            return pd.concat(
-                [result_first, result_middle, result_last], ignore_index=True
-            )
+            return pd.concat([result_first, result_middle, result_last], ignore_index=True)
 
         results = [
-            _impute_time_series(X, unique_id)
-            for unique_id in X[constants.UNIQUE_ID].unique()
+            _impute_time_series(X, unique_id) for unique_id in X[constants.UNIQUE_ID].unique()
         ]
 
         return pd.concat(results, ignore_index=True)
@@ -315,9 +298,7 @@ class SupportedLastImputer(Imputer):
         if time_series.empty:
             return pd.DataFrame()
 
-        data = X[
-            X[constants.TIMESTAMP_COLUMN].isin(time_series[constants.TIMESTAMP_COLUMN])
-        ]
+        data = X[X[constants.TIMESTAMP_COLUMN].isin(time_series[constants.TIMESTAMP_COLUMN])]
 
         result = self.support_imputer.fit_transform(data)
         result = result.query(f"{constants.UNIQUE_ID} == {unique_id}")
