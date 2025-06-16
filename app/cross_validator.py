@@ -128,7 +128,9 @@ class CrossValidator:
             determined by the cross-validation process.
         """
         if not self.is_fitted:
-            raise RuntimeError("The CrossValidator must be fitted before transforming data.")
+            raise RuntimeError(
+                "The CrossValidator must be fitted before transforming data."
+            )
 
         cv_df: pd.DataFrame = self.sf.cross_validation(  # type: ignore
             df=X,
@@ -172,7 +174,9 @@ class CrossValidator:
             """Calculates the specified metric for each model in the group."""
             result = pd.Series(
                 {
-                    f"{metric}_{model}": metric_callabe(group[constants.Y], group[model])
+                    f"{metric}_{model}": metric_callabe(
+                        group[constants.Y], group[model]
+                    )
                     for model in models
                 }
             )
@@ -182,12 +186,17 @@ class CrossValidator:
 
         cv_df_results = cv_df_grouped.apply(
             lambda group: _calculate_metrics(
-                group=group, metric=self.metric, metric_callabe=self.metric_callable, models=self.models  # type: ignore
+                group=group,
+                metric=self.metric,
+                metric_callabe=self.metric_callable,  # type: ignore
+                models=self.models,
             )
         ).reset_index()
 
         cv_df_results[constants.BEST_MODEL] = (
-            cv_df_results.filter(like=self.metric).idxmin(axis=1).str.replace(f"{self.metric}_", "")
+            cv_df_results.filter(like=self.metric)
+            .idxmin(axis=1)
+            .str.replace(f"{self.metric}_", "")
         )
 
         self._error_df = cv_df_results.copy()
@@ -197,6 +206,10 @@ class CrossValidator:
         ) + pd.Timedelta(
             self.forecast_horizon, unit=self.freq  # type: ignore
         )
-        cv_df_results = cv_df_results.rename(columns={constants.CUTOFF: constants.START_DATE})
+        cv_df_results = cv_df_results.rename(
+            columns={constants.CUTOFF: constants.START_DATE}
+        )
 
-        return cv_df_results[[constants.UNIQUE_ID, constants.START_DATE, constants.BEST_MODEL]]
+        return cv_df_results[
+            [constants.UNIQUE_ID, constants.START_DATE, constants.BEST_MODEL]
+        ]
