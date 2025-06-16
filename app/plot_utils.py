@@ -85,13 +85,13 @@ def plot_voronoi_area_boxplot(gdf: gpd.GeoDataFrame, variable: str, min_year: in
 
     # Tworzenie boxplotu
     fig, ax = plt.subplots(figsize=(10, 6))
-    ax.boxplot(area_data.values(), labels=area_data.keys(), patch_artist=True)
+    ax.boxplot(area_data.values(), labels=area_data.keys(), patch_artist=True)  # type: ignore
 
     ax.set_title(f"Rozkład powierzchni komórek Voronoi dla zmiennej '{variable}'")
     ax.set_xlabel("Rok")
     ax.set_ylabel("Powierzchnia")
     ax.set_xticks(range(len(years)))
-    ax.set_xticklabels(years, rotation=45)
+    ax.set_xticklabels(years - 1, rotation=45)
     ax.grid(True)
     fig.tight_layout()
     plt.show()
@@ -117,14 +117,14 @@ def plot_voronoi_area_timeseries(
     """
     years = np.arange(min_year, max_year + 1)
 
-    stats = {"year": [], "mean": [], "min": [], "max": [], "count": []}
+    stats = {"year": [], "root_mean_square": [], "min": [], "max": [], "count": []}
 
     for year in years:
         colname = f"{variable}_{year}_{constants.VORONOI_GEOMETRY}"
 
         if colname not in gdf.columns:
             stats["year"].append(year)
-            stats["mean"].append(np.nan)
+            stats["root_mean_square"].append(np.nan)
             stats["min"].append(np.nan)
             stats["max"].append(np.nan)
             stats["count"].append(0)
@@ -133,7 +133,7 @@ def plot_voronoi_area_timeseries(
         valid_gdf = gdf[gdf[colname].notnull() & (gdf[colname] != "")]
         if valid_gdf.empty:
             stats["year"].append(year)
-            stats["mean"].append(np.nan)
+            stats["root_mean_square"].append(np.nan)
             stats["min"].append(np.nan)
             stats["max"].append(np.nan)
             stats["count"].append(0)
@@ -143,7 +143,7 @@ def plot_voronoi_area_timeseries(
         area_series = valid_gdf.geometry.area
 
         stats["year"].append(year)
-        stats["mean"].append(area_series.mean())
+        stats["root_mean_square"].append(np.sqrt(np.mean(area_series**2)))
         stats["min"].append(area_series.min())
         stats["max"].append(area_series.max())
         stats["count"].append(len(area_series))
@@ -156,13 +156,19 @@ def plot_voronoi_area_timeseries(
     fig, ax = plt.subplots(figsize=(10, 6))
 
     years = stats["year"]
-    mean_values = stats["mean"]
+    root_mean_square_values = stats["root_mean_square"]
     min_values = stats["min"]
     max_values = stats["max"]
     counts = stats["count"]
 
     # Linie
-    ax.plot(years, mean_values, label="Średnia", color="blue", linewidth=2)
+    ax.plot(
+        years,
+        root_mean_square_values,
+        label="Pierwiastek średniej kwadratów",
+        color="blue",
+        linewidth=2,
+    )
     ax.plot(years, min_values, linestyle="--", label="Min", color="green", alpha=0.7)
     ax.plot(years, max_values, linestyle="--", label="Max", color="red", alpha=0.7)
 
@@ -170,7 +176,7 @@ def plot_voronoi_area_timeseries(
     sizes = [10 + c * 0.5 for c in counts]  # dynamiczne skalowanie
     ax.scatter(
         years,
-        mean_values,
+        root_mean_square_values,
         s=sizes,
         color="blue",
         alpha=0.6,
