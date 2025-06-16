@@ -68,3 +68,29 @@ POLAND_EPSG = "EPSG:2180"
 VORONOI_GEOMETRY = "voronoi_geometry"
 
 GEOMETRY = "geometry"
+
+# Forecasting constants
+FORECAST_HORIZON = "forecast_horizon"
+LEVEL = "level"
+MIN_DATE = "min_date"
+TEST_DATE = "test_date"
+UIDS = "uids"
+
+MODEL_AUTO_ARIMA_365 = "AutoARIMA"
+MODEL_AUTO_ETS_365 = "AutoETS"
+MODEL_HISTORIC_AVERAGE = "HistoricAverage"
+
+MAPE = "MAPE"
+MAE = "MAE"
+RMSE = "RMSE"
+
+BEST_MODEL = "best_model"
+CUTOFF = "cutoff"
+CUTOFF_FORMAT = "%Y-%m-%d"
+START_DATE = "start_date"
+Y = "y"
+
+
+PREDICTION = "prediction"
+LOWER = "lo"
+UPPER = "hi"
