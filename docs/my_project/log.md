@@ -1,4 +1,6 @@
 ## 18.06.2025
+- Cross validation (best model)
+- Predykcja i ewaluacja
 
 ## 13.06.2025
 - Imputacja danych
@@ -9,7 +11,7 @@
 ## 18.04.2025
 - Ingestor do danych
 - EDA
-- 
+
 ## 11.04.2025
 - Podpięcie narzędzi pod GITa
 
