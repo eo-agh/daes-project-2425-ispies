@@ -46,9 +46,7 @@ class Forecaster:
             Whether to print verbose output (default is True).
         """
         if len(level) > 1:
-            raise NotImplementedError(
-                "Multiple confidence levels are not supported yet."
-            )
+            raise NotImplementedError("Multiple confidence levels are not supported yet.")
 
         if len(level) == 0:
             raise NotImplementedError("At least one confidence level must be provided.")
@@ -122,8 +120,7 @@ class Forecaster:
             return self._generate_forecast(df, model)
 
         results = [
-            _apply_forecast(X, row)
-            for row in self.cv_results.itertuples(index=False, name=None)
+            _apply_forecast(X, row) for row in self.cv_results.itertuples(index=False, name=None)
         ]
 
         return pd.concat(results, ignore_index=True)
@@ -159,14 +156,8 @@ class Forecaster:
                 constants.TIMESTAMP_COLUMN,
                 constants.PREDICTION,
             ]
-            + [
-                f"{constants.PREDICTION}-{constants.LOWER}-{level}"
-                for level in self.level
-            ]
-            + [
-                f"{constants.PREDICTION}-{constants.UPPER}-{level}"
-                for level in self.level
-            ]
+            + [f"{constants.PREDICTION}-{constants.LOWER}-{level}" for level in self.level]
+            + [f"{constants.PREDICTION}-{constants.UPPER}-{level}" for level in self.level]
         )
 
         return result  # type: ignore
