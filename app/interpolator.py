@@ -85,9 +85,7 @@ class Interpolator:
         gpd.GeoDataFrame
             A GeoDataFrame containing the transformed data with interpolated values.
         """
-        pairs = [
-            self._prediction_for_missing_point(index, X) for index in self.points.index
-        ]
+        pairs = [self._prediction_for_missing_point(index, X) for index in self.points.index]
 
         metrics = {
             key: value(
@@ -117,9 +115,7 @@ class Interpolator:
         """
         return self.fit(X).transform(X)
 
-    def _prediction_for_missing_point(
-        self, index: int, X: gpd.GeoDataFrame
-    ) -> tuple[float, float]:
+    def _prediction_for_missing_point(self, index: int, X: gpd.GeoDataFrame) -> tuple[float, float]:
         """Use N-1 points to predict the value for a missing point."""
         point = self.points.loc[[index]]
         points = self.points.drop(index)
@@ -153,9 +149,7 @@ def knn_one_euclidean_method(
         points[[constants.LATITUDE, constants.LONGITUDE]].to_numpy(),
         points[constants.UNIQUE_ID],
     )
-    prediction = classifier.predict(
-        grid[[constants.LATITUDE, constants.LONGITUDE]].to_numpy()
-    )
+    prediction = classifier.predict(grid[[constants.LATITUDE, constants.LONGITUDE]].to_numpy())
     grid[constants.UNIQUE_ID] = prediction
     merged = grid.merge(
         points[[constants.UNIQUE_ID, constants.Y]],
