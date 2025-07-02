@@ -1,6 +1,7 @@
 ## 18.06.2025
 - Cross validation (best model)
 - Predykcja i ewaluacja
+- interpolacja
 
 ## 13.06.2025
 - Imputacja danych
